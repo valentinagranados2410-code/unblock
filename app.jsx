@@ -23,10 +23,9 @@ function App() {
       <Hero openLOI={openLOI} layout={t.heroLayout} DashEl={t.heroLayout === "split" ? dash : <LiveDashboard />} />
       <LogoBar />
       <VideoSection />
-      <Bottleneck />
       <HowItWorks />
       <Impact />
-      <DashboardSection DashEl={<LiveDashboard />} />
+      <DashboardSection DashEl={<LiveDashboard />} openLOI={openLOI} />
       <Pricing variant={t.pricing} openLOI={openLOI} />
       <Proof />
       <PilotCTA openLOI={openLOI} />

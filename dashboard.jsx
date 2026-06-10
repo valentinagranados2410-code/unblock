@@ -129,4 +129,112 @@ function LiveDashboard({ variant = "cards" }) {
   );
 }
 
-window.LiveDashboard = LiveDashboard;
+/* ---- eases a number toward its target with easeOutCubic ---- */
+function useEase(target, dur = 420) {
+  const [val, setVal] = useState(target);
+  const ref = useRef(target);
+  const raf = useRef(null);
+  useEffect(() => {
+    const start = ref.current;
+    const t0 = performance.now();
+    cancelAnimationFrame(raf.current);
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      const v = start + (target - start) * e;
+      ref.current = v;
+      setVal(v);
+      if (p < 1) raf.current = requestAnimationFrame(step);
+      else { ref.current = target; setVal(target); }
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target]);
+  return val;
+}
+
+const TRAD_RATE = 3.50;
+const UNBLOCK_RATE = 1.65;
+
+function SavingsCalculator({ openLOI }) {
+  const [hours, setHours] = useState(10000);
+
+  const trad = hours * TRAD_RATE;
+  const unblock = hours * UNBLOCK_RATE;
+  const save = trad - unblock;
+  const pct = Math.round((save / trad) * 100);
+
+  const tradA = useEase(trad);
+  const unblockA = useEase(unblock);
+  const saveA = useEase(save);
+
+  const usd = (n) => "$" + Math.round(n).toLocaleString();
+  const pctTrack = ((hours - 1000) / (100000 - 1000)) * 100;
+
+  return (
+    <div className="card calc">
+      {/* controls */}
+      <div className="calc-controls">
+        <span className="chip calc-live"><span className="nav-chip-dot" />LIVE · ${UNBLOCK_RATE.toFixed(2)}/GPU-HR</span>
+        <h3 className="calc-title">Model your monthly savings</h3>
+        <p className="calc-sub">Estimate what off-grid compute saves against hyperscaler on-demand rates.</p>
+
+        <div className="calc-slider">
+          <div className="calc-slider-top">
+            <label htmlFor="calc-hours" className="calc-slider-lbl">Monthly GPU-hours</label>
+            <span className="calc-slider-val mono">{hours.toLocaleString()}<small>hrs</small></span>
+          </div>
+          <input
+            id="calc-hours"
+            className="calc-range"
+            type="range"
+            min="1000"
+            max="100000"
+            step="1000"
+            value={hours}
+            onChange={(e) => setHours(+e.target.value)}
+          />
+          <div className="calc-ticks mono">
+            <span>1K</span><span>50K</span><span>100K</span>
+          </div>
+        </div>
+
+        <div className="calc-compare">
+          <div className="calc-cell">
+            <div className="calc-cell-top">
+              <span className="calc-cell-name">Traditional cloud</span>
+              <span className="calc-cell-tag mono">AWS / GCP</span>
+            </div>
+            <div className="calc-cell-v mono">{usd(tradA)}</div>
+            <div className="calc-cell-rate mono">@ $3.50 / GPU-hr</div>
+          </div>
+          <div className="calc-cell us">
+            <div className="calc-cell-top">
+              <span className="calc-cell-name">Unblock off-grid</span>
+              <span className="calc-cell-tag mono">Flare-powered</span>
+            </div>
+            <div className="calc-cell-v mono">{usd(unblockA)}</div>
+            <div className="calc-cell-rate mono">@ $1.65 / GPU-hr</div>
+          </div>
+        </div>
+      </div>
+
+      {/* result */}
+      <div className="calc-result">
+        <div className="calc-result-glow" />
+        <span className="calc-result-lbl mono">Estimated monthly savings</span>
+        <div className="calc-result-num mono">{usd(saveA)}</div>
+        <span className="calc-badge mono"><span className="calc-badge-pct">{pct}%</span> lower cost</span>
+        <p className="calc-annual mono"><b>{usd(save * 12)}</b> saved annually · zero upfront capital</p>
+        <div className="calc-cta">
+          <button className="btn btn-primary btn-lg" onClick={() => openLOI && openLOI()}>
+            Reserve this allocation <span className="btn-arrow">→</span>
+          </button>
+          <p className="calc-fine mono">Non-binding · fully refundable $5,000 deposit secures your slot</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { LiveDashboard, SavingsCalculator });
