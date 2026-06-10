@@ -6,7 +6,7 @@ function useReveal() {
   useE1(() => {
     const els = document.querySelectorAll(".reveal:not(.in)");
     const io = new IntersectionObserver((ents) => {
-      ents.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      ents.forEach((e) => {if (e.isIntersecting) {e.target.classList.add("in");io.unobserve(e.target);}});
     }, { threshold: 0.14 });
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
@@ -17,7 +17,7 @@ function Nav({ openLOI }) {
   const [scrolled, setScrolled] = useS1(false);
   useE1(() => {
     const on = () => setScrolled(window.scrollY > 12);
-    window.addEventListener("scroll", on); on();
+    window.addEventListener("scroll", on);on();
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
@@ -28,42 +28,43 @@ function Nav({ openLOI }) {
           <span className="brand-name">Unblock<span className="brand-sub"> Energy</span></span>
         </a>
         <div className="nav-links">
-          <a href="#problem">The bottleneck</a>
           <a href="#how">How it works</a>
-          <a href="#dashboard">Live ops</a>
+          <a href="#impact">Value & Impact</a>
+          <a href="#dashboard">Live Operations
+</a>
           <a href="#pricing">Pricing</a>
+          <a href="#testimonials">Testimonials</a>
         </div>
         <div className="nav-cta">
           <span className="chip nav-chip"><span className="nav-chip-dot" />12 pilot slots</span>
           <button className="btn btn-primary" onClick={openLOI}>Reserve a slot <span className="btn-arrow">→</span></button>
         </div>
       </div>
-    </nav>
-  );
+    </nav>);
 }
 
 function HeroStats() {
   const items = [
-    { v: "$1.65", l: "per GPU-hour", c: "var(--accent)" },
-    { v: "~45%", l: "below hyperscalers", c: "var(--ink)" },
-    { v: "97%+", l: "CO₂ reduction", c: "var(--green)" },
-    { v: "<90d", l: "to first compute", c: "var(--ink)" },
-  ];
+  { v: "$1.65", l: "per GPU-hour", c: "var(--accent)" },
+  { v: "~45%", l: "below hyperscalers", c: "var(--ink)" },
+  { v: "97%+", l: "CO₂ reduction", c: "var(--green)" },
+  { v: "<90d", l: "to first compute", c: "var(--ink)" }];
+
   return (
     <div className="hero-stats">
-      {items.map((s) => (
-        <div key={s.l} className="hero-stat">
+      {items.map((s) =>
+      <div key={s.l} className="hero-stat">
           <span className="hero-stat-v mono" style={{ color: s.c }}>{s.v}</span>
           <span className="hero-stat-l">{s.l}</span>
         </div>
-      ))}
-    </div>
-  );
+      )}
+    </div>);
+
 }
 
 const HERO_EYEBROW = "Flare-gas powered AI compute";
-const HERO_H1 = "Stranded gas. Online GPUs. Right at the wellhead.";
-const HERO_SUB = "Unblock deploys modular, mobile edge data centers to oil fields — converting wasted flare gas into clean, low-cost electricity that powers GPU compute on-site. Immediate capacity, zero upfront capital, verified emissions cuts.";
+const HERO_H1 = "Turn Stranded Energy Into Affordable AI Compute";
+const HERO_SUB = "Deploy AI workloads at $1.65/GPU-hour using modular data centers powered by captured flare gas. Reduce costs, secure capacity, and cut emissions by 97%+";
 
 function Hero({ openLOI, layout, DashEl }) {
   if (layout === "statement") {
@@ -80,8 +81,8 @@ function Hero({ openLOI, layout, DashEl }) {
           <HeroStats />
           <div className="reveal in" style={{ marginTop: 56, maxWidth: 980, marginInline: "auto" }}>{DashEl}</div>
         </div>
-      </header>
-    );
+      </header>);
+
   }
   if (layout === "centered") {
     return (
@@ -97,8 +98,8 @@ function Hero({ openLOI, layout, DashEl }) {
           <HeroStats />
           <div className="reveal in" style={{ marginTop: 48, maxWidth: 1000, marginInline: "auto" }}>{DashEl}</div>
         </div>
-      </header>
-    );
+      </header>);
+
   }
   // split (default)
   return (
@@ -116,8 +117,8 @@ function Hero({ openLOI, layout, DashEl }) {
         </div>
         <div className="hero-vis reveal in">{DashEl}</div>
       </div>
-    </header>
-  );
+    </header>);
+
 }
 
 function LogoBar() {
@@ -130,8 +131,8 @@ function LogoBar() {
           {names.map((n) => <span key={n} className="logobar-logo mono">{n}</span>)}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 function VideoSection() {
@@ -139,7 +140,7 @@ function VideoSection() {
   const vidRef = useR1(null);
   const start = () => {
     setPlay(true);
-    requestAnimationFrame(() => { if (vidRef.current) vidRef.current.play(); });
+    requestAnimationFrame(() => {if (vidRef.current) vidRef.current.play();});
   };
   return (
     <section className="section video-sec" style={{ paddingTop: 0 }}>
@@ -152,39 +153,33 @@ function VideoSection() {
               src="media/explainer.mp4"
               controls={play}
               playsInline
-              preload="metadata"
-            ></video>
-            {!play && (
-              <button className="video-cover" onClick={start} aria-label="Play 90-second explainer">
+              preload="metadata">
+            </video>
+            {!play &&
+            <button className="video-cover" onClick={start} aria-label="Play 90-second explainer">
                 <span className="video-play"><span>▶</span></span>
                 <span className="video-cap mono">90-SEC EXPLAINER · FLARE → POWER → COMPUTE</span>
               </button>
-            )}
+            }
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
 
 const BOTTLENECKS = [
-  { tag: "COST", h: "Compute is priced like a scarce commodity", b: "Hyperscaler on-demand GPUs run $3.00–$4.00 per hour, and volatile grid electricity makes every training run a budgeting gamble.", stat: "$3–4", statl: "/ GPU-hr market rate" },
-  { tag: "CAPACITY", h: "Waitlists measured in quarters, not days", b: "New data centers take years to permit and build. Demand for accelerated compute is outrunning every grid interconnect queue in the country.", stat: "2–4 yrs", statl: "to bring a site online" },
-  { tag: "WASTE", h: "Billions of cubic feet of gas, burned for nothing", b: "Oil fields flare enormous volumes of natural gas daily — energy vented straight into the atmosphere as CO₂, with zero economic return.", stat: "140B m³", statl: "gas flared globally / yr" },
-];
+{ tag: "COST", h: "Compute is priced like a scarce commodity", b: "Hyperscaler on-demand GPUs run $3.00–$4.00 per hour, and volatile grid electricity makes every training run a budgeting gamble.", stat: "$3–4", statl: "/ GPU-hr market rate" },
+{ tag: "CAPACITY", h: "Waitlists measured in quarters, not days", b: "New data centers take years to permit and build. Demand for accelerated compute is outrunning every grid interconnect queue in the country.", stat: "2–4 yrs", statl: "to bring a site online" },
+{ tag: "WASTE", h: "Billions of cubic feet of gas, burned for nothing", b: "Oil fields flare enormous volumes of natural gas daily — energy vented straight into the atmosphere as CO₂, with zero economic return.", stat: "140B m³", statl: "gas flared globally / yr" }];
+
 
 function Bottleneck() {
   return (
     <section className="section" id="problem">
       <div className="wrap">
-        <div className="sec-head reveal">
-          <span className="eyebrow">The bottleneck</span>
-          <h2 className="h-section" style={{ marginTop: 14 }}>Two enormous problems,<br />sitting right next to each other.</h2>
-          <p className="lead" style={{ maxWidth: 560, marginTop: 16 }}>AI is starved for power and compute. Oil fields are throwing away the exact energy that could supply it. Unblock closes the gap.</p>
-        </div>
         <div className="bottleneck-grid">
-          {BOTTLENECKS.map((c, i) => (
-            <div key={c.tag} className="card bottleneck-card reveal" style={{ transitionDelay: i * 80 + "ms" }}>
+          {BOTTLENECKS.map((c, i) => <div key={c.tag} className="card bottleneck-card reveal" style={{ transitionDelay: i * 80 + "ms" }}>
               <span className="bottleneck-tag mono">{c.tag}</span>
               <h3 className="bottleneck-h">{c.h}</h3>
               <p className="bottleneck-b">{c.b}</p>
@@ -193,18 +188,18 @@ function Bottleneck() {
                 <span className="bottleneck-stat-l">{c.statl}</span>
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
 
 const STEPS_HOW = [
-  { n: "01", t: "Capture", h: "Tap the flare", b: "We connect modular gensets to flare stacks at the wellhead, capturing gas that would otherwise be burned off and vented.", chip: "97%+ methane destruction", img: "media/capture-flare.jpeg" },
-  { n: "02", t: "Convert", h: "Power on-site", b: "On-site generation turns that gas into clean, behind-the-meter electricity — no grid interconnect, no transmission losses, no queue.", chip: "Behind-the-meter · 0 grid draw", img: "media/convert-power.jpeg" },
-  { n: "03", t: "Compute", h: "GPUs online", b: "Containerized, liquid-cooled GPU clusters spin up next to the power source. Capacity goes live in weeks, not years.", chip: "H100-class · live in <90 days", img: "media/compute-gpus.jpeg" },
-];
+{ n: "01", t: "Capture", h: "Tap the flare", b: "We connect modular gensets to flare stacks at the wellhead, capturing gas that would otherwise be burned off and vented.", chip: "97%+ methane destruction", img: "media/capture-flare.jpeg" },
+{ n: "02", t: "Convert", h: "Power on-site", b: "On-site generation turns that gas into clean, behind-the-meter electricity — no grid interconnect, no transmission losses, no queue.", chip: "Behind-the-meter · 0 grid draw", img: "media/convert-power.jpeg" },
+{ n: "03", t: "Compute", h: "GPUs online", b: "Containerized, liquid-cooled GPU clusters spin up next to the power source. Capacity goes live in weeks, not years.", chip: "H100-class · live in <90 days", img: "media/compute-gpus.jpeg" }];
+
 
 function HowItWorks() {
   return (
@@ -212,30 +207,30 @@ function HowItWorks() {
       <div className="wrap">
         <div className="sec-head reveal">
           <span className="eyebrow">How it works</span>
-          <h2 className="h-section" style={{ marginTop: 14 }}>Wasted gas to working GPUs,<br />in three moves.</h2>
+          <h2 className="h-section" style={{ marginTop: 14 }}>Wasted Gas to Working GPUs,<br />in Three Moves.</h2>
         </div>
         <div className="how-grid">
-          {STEPS_HOW.map((s, i) => (
-            <div key={s.n} className="how-step reveal" style={{ transitionDelay: i * 90 + "ms" }}>
+          {STEPS_HOW.map((s, i) =>
+          <div key={s.n} className="how-step reveal" style={{ transitionDelay: i * 90 + "ms" }}>
               <div className="how-step-top">
                 <span className="how-n mono">{s.n}</span>
                 {i < 2 && <span className="how-arrow mono">→</span>}
               </div>
-              {s.img ? (
-                <div className="how-ph how-img"><img src={s.img} alt={s.h} loading="lazy" /></div>
-              ) : (
-                <div className="ph how-ph"><span>{s.t.toUpperCase()} · PHOTO</span></div>
-              )}
+              {s.img ?
+            <div className="how-ph how-img"><img src={s.img} alt={s.h} loading="lazy" /></div> :
+
+            <div className="ph how-ph"><span>{s.t.toUpperCase()} · PHOTO</span></div>
+            }
               <span className="how-kicker mono">{s.t}</span>
               <h3 className="how-h">{s.h}</h3>
               <p className="how-b">{s.b}</p>
               <span className="chip how-chip">{s.chip}</span>
             </div>
-          ))}
+          )}
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
 
 Object.assign(window, { useReveal, Nav, Hero, LogoBar, VideoSection, Bottleneck, HowItWorks });

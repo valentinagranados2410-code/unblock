@@ -81,7 +81,7 @@ body {
 
 /* ---- layout primitives ---- */
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
-.section { padding: 104px 0; }
+.section { padding: 104px 0; scroll-margin-top: 80px; }
 @media (max-width: 720px) { .section { padding: 64px 0; } .wrap { padding: 0 20px; } }
 
 .eyebrow {
